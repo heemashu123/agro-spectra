@@ -16,8 +16,7 @@ pandas>=2.0.0
 torch>=2.0.0
 
 # HuggingFace Space demo
-huggingface-hub<=0.24.7
-gradio>=4.44.0
+gradio>=5.0.1
 matplotlib>=3.7.0
 
 # Inference Client Libraries (Hackathon strict requirements)
