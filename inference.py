@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from pydantic import BaseModel
 import numpy as np
 from stable_baselines3 import PPO
@@ -14,26 +14,42 @@ if os.path.exists(MODEL_PATH):
 else:
     print(f"Warning: {MODEL_PATH} not found. Ensure the model is trained.")
 
-class Observation(BaseModel):
-    obs: list
-
 @app.post("/reset")
-def reset():
+async def reset(request: Request):
     """Endpoint required by OpenEnv validation to reset the agent state."""
+    # Read the body fully but we just return ok
+    try:
+        data = await request.json()
+    except Exception:
+        pass
     return {"status": "ok"}
 
 @app.post("/act")
-async def act(data: Observation):
+async def act(request: Request):
     """Endpoint to predict the next action given the current observation."""
-    obs = np.array(data.obs, dtype=np.float32)
+    try:
+        data = await request.json()
+    except Exception:
+        data = {}
+    
+    # Try multiple ways platforms send observations
+    obs_data = data.get("obs", [])
+    if not obs_data:
+        obs_data = data.get("state", [])
+    if not obs_data:
+        obs_data = data.get("observation", [])
+        
+    obs = np.array(obs_data, dtype=np.float32)
+    if obs.ndim == 1:
+        obs = obs.reshape(1, -1)
+        
     action, _states = model.predict(obs, deterministic=True)
-    # Return the action as a native python int
     return {"action": int(action)}
 
 @app.post("/predict")
-async def predict(data: Observation):
-    """Alias for /act to ensure compatibility with different validation scripts."""
-    return await act(data)
+async def predict(request: Request):
+    """Alias for /act"""
+    return await act(request)
 
 @app.get("/health")
 def health():
