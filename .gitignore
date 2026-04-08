@@ -1,0 +1,50 @@
+# =============================================================================
+# Agro-Spectra .gitignore
+# =============================================================================
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Generated model files (large binaries — share via release, not repo)
+agro_ppo_model.zip
+best_agro_model/
+
+# Generated data (reproducible via data_generator.py)
+mock_farm_data.csv
+
+# Training logs and monitor files
+logs/
+*.monitor.csv
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Evaluation results (auto-generated)
+evaluations.npz
