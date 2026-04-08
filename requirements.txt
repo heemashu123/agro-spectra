@@ -16,6 +16,7 @@ pandas>=2.0.0
 torch>=2.0.0
 
 # HuggingFace Space demo
+huggingface-hub<=0.24.7
 gradio>=4.44.0
 matplotlib>=3.7.0
 
